@@ -14,7 +14,8 @@ import java.util.Collections;
 
 @Component
 public class AuthProviderImpl implements AuthenticationProvider {
-    private PersonDetailsService personDetailsService;
+
+    private final PersonDetailsService personDetailsService;
 
     @Autowired
     public AuthProviderImpl(PersonDetailsService personDetailsService) {
@@ -23,21 +24,21 @@ public class AuthProviderImpl implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String name = authentication.getName();
+        String username = authentication.getName();
 
-        UserDetails personDetails = personDetailsService.loadUserByUsername(name);
+        UserDetails personDetails = personDetailsService.loadUserByUsername(username);
 
         String password = authentication.getCredentials().toString();
 
-        if (!password.equals(personDetails.getPassword())) {
-            throw new BadCredentialsException("Password is not correct");
-        }
+        if (!password.equals(personDetails.getPassword()))
+            throw new BadCredentialsException("Incorrect password");
 
-        return new UsernamePasswordAuthenticationToken(personDetails, password, Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(personDetails, password,
+                Collections.emptyList());
     }
 
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(Class<?> aClass) {
         return true;
     }
 }

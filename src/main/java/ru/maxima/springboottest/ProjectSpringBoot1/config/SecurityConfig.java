@@ -1,15 +1,18 @@
 package ru.maxima.springboottest.ProjectSpringBoot1.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import ru.maxima.springboottest.ProjectSpringBoot1.security.AuthProviderImpl;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
+
     private final AuthProviderImpl authProvider;
 
     @Autowired
@@ -17,8 +20,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.authProvider = authProvider;
     }
 
+    // Настраивает аутентификацию
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(authProvider);
+    }
 
-    protected void configure(AuthenticationManagerBuilder a) {
-        a.authenticationProvider(authProvider);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((authz) -> authz
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(withDefaults());
+        return http.build();
     }
 }
