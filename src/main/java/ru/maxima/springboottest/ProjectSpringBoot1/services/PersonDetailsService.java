@@ -9,7 +9,6 @@ import ru.maxima.springboottest.ProjectSpringBoot1.models.Person;
 import ru.maxima.springboottest.ProjectSpringBoot1.repositories.PeopleRepository;
 import ru.maxima.springboottest.ProjectSpringBoot1.security.PersonDetails;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

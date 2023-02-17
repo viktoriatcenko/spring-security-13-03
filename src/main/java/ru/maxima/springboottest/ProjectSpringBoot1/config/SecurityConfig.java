@@ -6,28 +6,31 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.maxima.springboottest.ProjectSpringBoot1.security.AuthProviderImpl;
+import ru.maxima.springboottest.ProjectSpringBoot1.services.PersonDetailsService;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthProviderImpl authProvider;
+//    private final AuthProviderImpl authProvider;
+//
+//    @Autowired
+//    public SecurityConfig(AuthProviderImpl authProvider) {
+//        this.authProvider = authProvider;
+//    }
+
+    private final PersonDetailsService personDetailsService;
 
     @Autowired
-    public SecurityConfig(AuthProviderImpl authProvider) {
-        this.authProvider = authProvider;
-    }
-
-    // Настраивает аутентификацию
-    protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authProvider);
+    public SecurityConfig(PersonDetailsService personDetailsService) {
+        this.personDetailsService = personDetailsService;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeHttpRequests((authz) -> authz
                         .anyRequest().authenticated()
                 )
