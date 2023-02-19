@@ -4,7 +4,6 @@ package ru.maxima.springboottest.ProjectSpringBoot1.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -27,6 +26,9 @@ public class Person {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "role")
+    private String role;
 
 //    @Column(name = "email")
 //    @NotEmpty(message = "Email should not to be empty")
@@ -92,5 +94,13 @@ public class Person {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
