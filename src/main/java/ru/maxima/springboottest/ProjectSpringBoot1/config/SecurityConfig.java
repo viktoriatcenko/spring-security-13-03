@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.maxima.springboottest.ProjectSpringBoot1.services.PersonDetailsService;
 
 @Configuration
@@ -36,7 +37,7 @@ public class SecurityConfig {
                 .failureUrl("/auth/login?error")
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/auth/login");
 
         return http.build();
@@ -44,7 +45,6 @@ public class SecurityConfig {
 
     @Bean
     protected PasswordEncoder getPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }

@@ -32,7 +32,7 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registrationPage() {
+    public String registrationPage(@ModelAttribute("person") Person person) {
         return "auth/registration";
     }
 
