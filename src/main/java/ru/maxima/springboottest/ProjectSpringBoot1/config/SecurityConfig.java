@@ -28,7 +28,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/admin").hasRole("ADMIN")
-                .requestMatchers("/auth/login", "/auth/registration").permitAll()
+                .requestMatchers("/auth/login", "/auth/registration","/auth/makeAdmin",
+                        "/auth/addAdmin","/people/new","/people/*/edit","/people/*","/auth/addAdmin/*").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 .formLogin().loginPage("/auth/login")

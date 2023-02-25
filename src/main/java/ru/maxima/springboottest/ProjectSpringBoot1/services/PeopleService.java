@@ -1,6 +1,9 @@
 package ru.maxima.springboottest.ProjectSpringBoot1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.maxima.springboottest.ProjectSpringBoot1.models.Person;
@@ -30,11 +33,20 @@ public class PeopleService {
 //        viktor.forEach(System.out::println);
 //        List<Person> alex1 = peopleRepository.findByNameOrEmail("Alex", "test@maillll,ru");
 //        alex1.forEach(System.out::println);
-        return peopleRepository.findAll();
+        return peopleRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+    }
+
+    public List<Person> findAllWithMatchingPassword(){
+        List<Person> people = peopleRepository.findByPasswordNotContainingOrderByIdAsc("null");
+        return people;
     }
 
     public Person findOne(int id) {
         return peopleRepository.findById(id).orElse(null);
+    }
+
+    public Person findFirstByNameAndAge(String name,int age) {
+        return peopleRepository.findFirstByNameAndAge(name,age).orElse(null);
     }
 
     @Transactional

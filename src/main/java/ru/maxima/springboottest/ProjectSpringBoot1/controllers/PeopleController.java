@@ -47,7 +47,8 @@ public class PeopleController {
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "people/new";
-
+        person.setPassword("null");
+        person.setRole("ROLE_USER");
         peopleService.save(person);
         return "redirect:/people";
     }
@@ -58,17 +59,23 @@ public class PeopleController {
         return "people/edit";
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult,
                          @PathVariable("id") int id) {
         if (bindingResult.hasErrors())
             return "people/edit";
-
-        peopleService.update(id, person);
+        Person controlPerson = peopleService.findOne(id);
+        if(controlPerson != null) {
+            person.setRole(controlPerson.getRole());
+            person.setPassword(controlPerson.getPassword());
+            peopleService.update(id, person);
+        }else{
+            throw new NullPointerException("Response the returned null pointer exeption");
+        }
         return "redirect:/people";
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         peopleService.delete(id);
         return "redirect:/people";

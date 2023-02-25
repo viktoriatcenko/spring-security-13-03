@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add admin</title>
+</head>
+<body>
+<h3 th:if="${#lists.size(people) != 0}" style="color:blue">List people :</h3>
+<h3 th:if="${#lists.size(people) == 0}" style="color: blue">List people is empty...</h3>
+<div th:each="person : ${people}" th:if="${#lists.size(people) != 0}">
+    <a th:href="@{/people/{id}(id=${person.getId()})}"
+       th:text="${person.getId() + ', ' + person.getName() + ', ' + person.getAge()
+      + ', ' + ((#strings.equals(person.getPassword(),'null'))?' Registration is recommended' : 'Registration is complete')
+      + ', ' + ((#strings.equals(person.getRole(),'ROLE_USER'))?' ROLE IS USER' : ' ROLE IS ADMIN')}">user
+    </a>
+</div>
+<hr/>
+<!--<h3 th:if="${#lists.size(people) != 0}" style="color:blue">Choose an administrator from the list :</h3>-->
+<h3 th:if="${#lists.size(peopleWithReg) == 0}" style="color: blue">For admin select list is empty.Register user..</h3>
+<form  th:method="POST" th:action="@{/auth/addAdmin}" th:object="${person}" th:if="${#lists.size(peopleWithReg) != 0}">
+    <label for="person" style="color:green">Choose person to make him admin </label>
+    <select th:field="*{id}" id="person">
+        <option th:each="person : ${peopleWithReg}"
+                th:value="${person.getId()}"
+                th:text="${person.getName()}">
+            user
+        </option>
+    </select>
+    <input type ="submit" value="Make admin">
+</form>
+<br/>
+<hr/>
+    <a href="/people/new">Create new user</a>
+<br/>
+<hr/>
+    <a href="/people">Main page</a>
+</body>
+</html>
+<!--th:if="${#strings.equals(person.getPassword(),'null')}"-->

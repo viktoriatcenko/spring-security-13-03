@@ -17,11 +17,11 @@ public class Person {
 
     @Column(name = "name")
     @NotEmpty(message = "Name should not to be empty")
-    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @Size(min = 3, max = 30, message = "Name should be between 2 and 30 characters")
     private String name;
 
     @Column(name = "age")
-    @Min(value = 0, message = "Age should be more than 0")
+    @Min(value = 1, message = "Age should be more than 0")
     private int age;
 
     @Column(name = "password")
@@ -41,10 +41,12 @@ public class Person {
     public Person() {
     }
 
-    public Person(int id, String name, int age) {
+    public Person(int id, String name, int age, String password, String role) {
         this.id = id;
         this.name = name;
         this.age = age;
+        this.password = password;
+        this.role = role;
     }
 
     public int getAge() {
@@ -102,5 +104,11 @@ public class Person {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return  "id = " + id + ", name = " + name + ", age = " + age +
+                ", password = " + password + ", role = " + role;
     }
 }
