@@ -21,7 +21,7 @@ public class PeopleService {
     public PeopleService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
     }
-
+    @Transactional
     public List<Person> findAll() {
 //        List<Person> byEmail = peopleRepository.findByEmail("mail3@mail.ru");
 //        byEmail.forEach(System.out::println);
@@ -35,16 +35,17 @@ public class PeopleService {
 //        alex1.forEach(System.out::println);
         return peopleRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
-
+    @Transactional
     public List<Person> findAllWithMatchingPassword(){
         List<Person> people = peopleRepository.findByPasswordNotContainingOrderByIdAsc("null");
         return people;
     }
-
+    @Transactional
     public Person findOne(int id) {
         return peopleRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public Person findFirstByNameAndAge(String name,int age) {
         return peopleRepository.findFirstByNameAndAge(name,age).orElse(null);
     }
