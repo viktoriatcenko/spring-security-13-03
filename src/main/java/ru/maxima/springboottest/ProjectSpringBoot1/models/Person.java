@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "person")
+@Table(name = "security_person")
 public class Person {
 
     @Id
@@ -27,26 +27,15 @@ public class Person {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private String role;
-
-//    @Column(name = "email")
-//    @NotEmpty(message = "Email should not to be empty")
-//    @Email(message = "Email should be valid")
-//    private String email;
-//
-//    @Column(name = "is_admin")
-//    private boolean isAdmin;
 
     public Person() {
     }
 
-    public Person(int id, String name, int age, String password, String role) {
+    public Person(int id, String name, int age, String password) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.password = password;
-        this.role = role;
     }
 
     public int getAge() {
@@ -98,17 +87,13 @@ public class Person {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     @Override
     public String toString() {
-        return  "id = " + id + ", name = " + name + ", age = " + age +
-                ", password = " + password + ", role = " + role;
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

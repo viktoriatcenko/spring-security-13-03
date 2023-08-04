@@ -3,11 +3,14 @@ package ru.maxima.springboottest.ProjectSpringBoot1.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.maxima.springboottest.ProjectSpringBoot1.models.Person;
+import ru.maxima.springboottest.ProjectSpringBoot1.security.PersonDetails;
 import ru.maxima.springboottest.ProjectSpringBoot1.services.PeopleService;
 
 
@@ -48,7 +51,6 @@ public class PeopleController {
         if (bindingResult.hasErrors())
             return "people/new";
         person.setPassword("null");
-        person.setRole("ROLE_USER");
         peopleService.save(person);
         return "redirect:/people";
     }
@@ -66,7 +68,6 @@ public class PeopleController {
             return "people/edit";
         Person controlPerson = peopleService.findOne(id);
         if(controlPerson != null) {
-            person.setRole(controlPerson.getRole());
             person.setPassword(controlPerson.getPassword());
             peopleService.update(id, person);
         }else{
@@ -79,5 +80,11 @@ public class PeopleController {
     public String delete(@PathVariable("id") int id) {
         peopleService.delete(id);
         return "redirect:/people";
+    }
+
+    @GetMapping("/show")
+    @ResponseBody
+    public String showUserInfo() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

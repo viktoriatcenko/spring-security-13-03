@@ -1,29 +1,37 @@
 package ru.maxima.springboottest.ProjectSpringBoot1.controllers;
 
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.maxima.springboottest.ProjectSpringBoot1.dto.PersonDTO;
 import ru.maxima.springboottest.ProjectSpringBoot1.models.Person;
 import ru.maxima.springboottest.ProjectSpringBoot1.services.PeopleService;
 import ru.maxima.springboottest.ProjectSpringBoot1.services.RegistrationService;
+import ru.maxima.springboottest.ProjectSpringBoot1.util.JWTutil;
 import ru.maxima.springboottest.ProjectSpringBoot1.validate.PersonValidator;
 
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/auth")
 public class AuthController {
     private final RegistrationService service;
     private final PersonValidator validator;
-    private PeopleService peopleService;
+    private final  PeopleService peopleService;
+    private final ModelMapper modelMapper;
+
+    private final JWTutil jwTutil;
     @Autowired
-    public AuthController(RegistrationService service, PersonValidator validator, PeopleService peopleService) {
+    public AuthController(RegistrationService service, PersonValidator validator, PeopleService peopleService, ModelMapper modelMapper, JWTutil jwTutil) {
         this.service = service;
         this.validator = validator;
         this.peopleService = peopleService;
+        this.modelMapper = modelMapper;
+        this.jwTutil = jwTutil;
     }
 
     @GetMapping("/login")
@@ -54,13 +62,25 @@ public class AuthController {
         return "redirect:/people";
     }
     @PostMapping("/registration")
-    public String performRegistration(@ModelAttribute("person") @Valid Person person,
+    public Map<String, String> performRegistration(@RequestBody @Valid PersonDTO personDTO,
                                       BindingResult bindingResult) {
-        System.out.println(person);
+        Person person = convertToPerson(personDTO);
+
         validator.validate(person, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return Map.of("message", "Wrong data from user");
+        }
+
         service.register(person);
-        return "redirect:/auth/login";
+
+        String token = jwTutil.generateToken(person.getName());
+
+        return Map.of("jwt-token", token);
     }
+
+
+
     @GetMapping("/admin")
     public String adminPage() {
         return "auth/admin";
@@ -83,9 +103,12 @@ public class AuthController {
     @PostMapping("/addAdmin")
     public String setAdmin(@ModelAttribute("employeeForm") Person getPerson) {
         Person person = peopleService.findOne(getPerson.getId());
-        person.setRole("ROLE_ADMIN");
         peopleService.save(person);
         return "redirect:/auth/makeAdmin";
+    }
+
+    private Person convertToPerson(PersonDTO personDTO) {
+        return this.modelMapper.map(personDTO, Person.class);
     }
 }
 

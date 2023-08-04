@@ -23,16 +23,6 @@ public class PeopleService {
     }
     @Transactional
     public List<Person> findAll() {
-//        List<Person> byEmail = peopleRepository.findByEmail("mail3@mail.ru");
-//        byEmail.forEach(System.out::println);
-//        List<Person> alex = peopleRepository.findByName("Alex");
-//        alex.forEach(System.out::println);
-//        List<Person> n = peopleRepository.findByNameStartingWith("N");
-//        n.forEach(System.out::println);
-//        List<Person> viktor = peopleRepository.findByNameOrEmail("Viktor", "mail5@mail.ru");
-//        viktor.forEach(System.out::println);
-//        List<Person> alex1 = peopleRepository.findByNameOrEmail("Alex", "test@maillll,ru");
-//        alex1.forEach(System.out::println);
         return peopleRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
     @Transactional

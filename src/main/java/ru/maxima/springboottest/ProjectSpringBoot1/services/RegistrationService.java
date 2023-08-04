@@ -33,7 +33,6 @@ public class RegistrationService {
         String password = person.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
         person.setPassword(encodedPassword);
-        person.setRole("ROLE_USER");
         if(controlPerson == null ){
             peopleRepository.save(person);
         }else{
